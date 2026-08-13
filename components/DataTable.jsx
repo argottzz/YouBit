@@ -8,7 +8,9 @@ export default function DataTable({ data, columns }) {
           <tr>
             {columns.map((column) => (
               <th
-                key={column.Key}
+                key={column.Key
+                  
+                }
                 className="px-6 py-4 text-left text-sm font-semibold text-gray-700"
               >
                 {column.header}
