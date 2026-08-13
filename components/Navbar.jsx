@@ -23,7 +23,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <Link href="/login">
+        <Link href="/menu/streamer">
           <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
             Login
           </button>
