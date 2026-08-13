@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
-
+import DataTable from "@/components/DataTable";
+import Link from "next/link";
 
 export default function StreamerPage() {
   const [streamers, setStreamers] = useState([]);
@@ -20,51 +20,31 @@ export default function StreamerPage() {
     fetchStreamers();
   }, []);
 
+  const columns = [
+    {
+      header: "Nama",
+      Key: "name",
+    },
+    {
+      header: "Kategori",
+      Key: "category",
+    },
+    {
+      header: "Subscriber",
+      Key: "subscriber",
+      format: (value) => value.toLocaleString("id-ID"),
+    },
+  ];
+
   return (
     <div>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <h1 className="mb-6 text-2xl font-bold">
-          Daftar Streamer
-        </h1>
+      <div className="mx-auto max-w-7xl px-6 py-6">
+        <h1 className="mb-6 text-2xl font-bold">Daftar Streamer</h1>
 
-        <div className="overflow-hidden rounded-lg bg-white shadow">
-          <table className="w-full">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Nama
-                </th>
+        <DataTable data={streamers} columns={columns} />
 
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Kategori
-                </th>
-
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Subscriber
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {streamers.map((item, index) => (
-                <tr
-                  key={index}
-                  className="border-t border-gray-200 hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4 text-gray-800">{item.name}</td>
-
-                  <td className="px-6 py-4 text-gray-600">{item.category}</td>
-
-                  <td className="px-6 py-4 text-gray-800">
-                    {item.subscriber.toLocaleString("id-ID")}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
         <div className="mt-4">
           <Link
             href="/menu/youtuber"
