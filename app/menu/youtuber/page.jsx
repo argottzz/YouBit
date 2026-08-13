@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
 export default function StreamerPage() {
   const [youtubers, setYoutbers] = useState([]);
@@ -18,10 +20,12 @@ export default function StreamerPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="mx-auto max-w-5xl">
-        <h1 className="mb-6 text-2xl font-bold text-gray-800">
-          Daftar Streamer
+    <div>
+      <Navbar />
+      
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <h1 className="mb-6 text-2xl font-bold">
+          Daftar Youtuber
         </h1>
 
         <div className="overflow-hidden rounded-lg bg-white shadow">
@@ -46,13 +50,9 @@ export default function StreamerPage() {
                   key={index}
                   className="border-t border-gray-200 hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4 text-gray-800">
-                    {item.name}
-                  </td>
+                  <td className="px-6 py-4 text-gray-800">{item.name}</td>
 
-                  <td className="px-6 py-4 text-gray-600">
-                    {item.category}
-                  </td>
+                  <td className="px-6 py-4 text-gray-600">{item.category}</td>
 
                   <td className="px-6 py-4 text-gray-800">
                     {item.subscriber.toLocaleString("id-ID")}
@@ -61,6 +61,14 @@ export default function StreamerPage() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="mt-4">
+          <Link
+            href="/menu/streamer"
+            className="inline-flex items-center rounded-3xl bg-red-600 px-4 py-2 text-white transition hover:bg-gray-700"
+          >
+            Streamer
+          </Link>
         </div>
       </div>
     </div>

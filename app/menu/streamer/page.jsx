@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
+
 
 export default function StreamerPage() {
   const [streamers, setStreamers] = useState([]);
@@ -19,9 +21,11 @@ export default function StreamerPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="mx-auto max-w-5xl">
-        <h1 className="mb-6 text-2xl font-bold text-gray-800">
+    <div>
+      <Navbar />
+
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <h1 className="mb-6 text-2xl font-bold">
           Daftar Streamer
         </h1>
 
@@ -32,14 +36,13 @@ export default function StreamerPage() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
                   Nama
                 </th>
+
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
                   Kategori
                 </th>
+
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
                   Subscriber
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Aksi
                 </th>
               </tr>
             </thead>
@@ -57,29 +60,20 @@ export default function StreamerPage() {
                   <td className="px-6 py-4 text-gray-800">
                     {item.subscriber.toLocaleString("id-ID")}
                   </td>
-
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <button className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600">
-                        Edit
-                      </button>
-
-                      <button className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600">
-                        Delete
-                      </button>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <div className="mt-4">
+          <Link
+            href="/menu/youtuber"
+            className="inline-flex items-center rounded-3xl bg-red-600 px-4 py-2 text-white transition hover:bg-gray-700"
+          >
+            Youtuber
+          </Link>
+        </div>
       </div>
-      <Link href="/menu/youtuber">
-        <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
-          Login
-        </button>
-      </Link>
     </div>
   );
 }
