@@ -52,9 +52,6 @@ export default function StreamerPage() {
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-1 text-sm font-medium text-gray-400">
-              Streaming & Creator
-            </p>
 
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Daftar Streamer
