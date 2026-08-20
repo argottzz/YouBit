@@ -7,10 +7,14 @@ export default function DataTable({ data, columns }) {
         <table className="w-full">
           <thead className="bg-[#181818]">
             <tr>
-              {columns.map((column) => (
+              {columns.map((column, index) => (
                 <th
                   key={column.Key}
-                  className="px-6 py-4 text-left text-sm font-semibold text-gray-300"
+                  className={`relative px-6 py-4 text-left text-sm font-semibold text-gray-300 ${
+                    index === 0
+                      ? "before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-red-600"
+                      : ""
+                  }`}
                 >
                   {column.header}
                 </th>
@@ -22,12 +26,16 @@ export default function DataTable({ data, columns }) {
             {data.map((item, index) => (
               <tr
                 key={index}
-                className="transition-colors duration-200 hover:bg-white/4"
+                className="group transition-colors duration-200 hover:bg-red-500/[0.04]"
               >
-                {columns.map((column) => (
+                {columns.map((column, columnIndex) => (
                   <td
                     key={column.Key}
-                    className="px-6 py-4 text-sm text-gray-300"
+                    className={`px-6 py-4 text-sm text-gray-300 ${
+                      columnIndex === 0
+                        ? "font-semibold text-white group-hover:text-red-400"
+                        : ""
+                    }`}
                   >
                     {column.format
                       ? column.format(item[column.Key])
