@@ -3,24 +3,29 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import DataTable from "@/components/DataTable";
+import AddDataForm from "@/components/AddFormData";
 import Link from "next/link";
 
-export default function StreamerPage() {
-  const [youtubers, setYoutubers] = useState([]);
+export default function YoutuberPage() {
+  const [youtbers, setYoutubers] = useState([]);
+
+  async function fetchYoutubers() {
+    try {
+      const response = await fetch("http://localhost:8000/api/youtubers");
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil data youtuber");
+      }
+
+      const responseJson = await response.json();
+
+      setYoutubers(responseJson.data);
+    } catch (error) {
+      console.error("Gagal mengambil data youtubers:", error);
+    }
+  }
 
   useEffect(() => {
-    async function fetchYoutubers() {
-      try {
-        const response = await fetch("http://localhost:8000/api/youtubers");
-
-        const responseJson = await response.json();
-
-        setYoutubers(responseJson.data);
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
-      }
-    }
-
     fetchYoutubers();
   }, []);
 
@@ -56,7 +61,6 @@ export default function StreamerPage() {
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Daftar Youtuber
             </h1>
@@ -74,7 +78,11 @@ export default function StreamerPage() {
           </Link>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="flex flex-col gap-6">
+          <div>
+            <AddDataForm type="youtuber" onSuccess={fetchYoutubers} />
+          </div>
+
           <DataTable data={youtubers} columns={columns} />
         </div>
       </div>

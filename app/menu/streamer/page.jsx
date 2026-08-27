@@ -3,20 +3,29 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import DataTable from "@/components/DataTable";
+import AddDataForm from "@/components/AddFormData";
 import Link from "next/link";
 
 export default function StreamerPage() {
   const [streamers, setStreamers] = useState([]);
 
-  useEffect(() => {
-    async function fetchStreamers() {
+  async function fetchStreamers() {
+    try {
       const response = await fetch("http://localhost:8000/api/streamers");
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil data streamer");
+      }
 
       const responseJson = await response.json();
 
       setStreamers(responseJson.data);
+    } catch (error) {
+      console.error("Gagal mengambil data streamer:", error);
     }
+  }
 
+  useEffect(() => {
     fetchStreamers();
   }, []);
 
@@ -52,7 +61,6 @@ export default function StreamerPage() {
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Daftar Streamer
             </h1>
@@ -70,10 +78,14 @@ export default function StreamerPage() {
           </Link>
         </div>
 
-          <div className="overflow-x-auto">
-            <DataTable data={streamers} columns={columns} />
+        <div className="flex flex-col gap-6">
+          <div>
+            <AddDataForm type="youtuber" onSuccess={fetchStreamers} />
           </div>
+
+          <DataTable data={streamers} columns={columns} />
         </div>
       </div>
+    </div>
   );
 }

@@ -26,7 +26,7 @@ export default function DataTable({ data, columns }) {
             {data.map((item, index) => (
               <tr
                 key={index}
-                className="group transition-colors duration-200 hover:bg-red-500/[0.04]"
+                className="group transition-colors duration-200 hover:bg-red-500/4"
               >
                 {columns.map((column, columnIndex) => (
                   <td
