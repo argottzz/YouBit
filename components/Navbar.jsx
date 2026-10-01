@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Navbar() {
+  const { user, isLoggedIn, loading, logout } = useAuth();
+
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-[#0F0F0F] border-b border-gray-700">
       <Link
@@ -23,11 +28,27 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <Link href="/login">
-          <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
-            Login
-          </button>
-        </Link>
+        {loading ? (
+          <span className="text-sm text-gray-500">Memuat...</span>
+        ) : isLoggedIn ? (
+          <>
+            <span className="hidden sm:block text-sm text-gray-300">
+              Halo, <span className="font-semibold text-white">{user?.username ?? user?.email}</span>
+            </span>
+            <button
+              onClick={logout}
+              className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-red-600 hover:border-red-600 cursor-pointer text-white"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link href="/login">
+            <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
+              Login
+            </button>
+          </Link>
+        )}
         <Link href="/menu/streamer">
           <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
             Report
@@ -37,4 +58,3 @@ export default function Navbar() {
     </nav>
   );
 }
-``;

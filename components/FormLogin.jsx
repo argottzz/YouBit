@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 export default function LoginForm({
   logo,
@@ -12,20 +13,32 @@ export default function LoginForm({
   registerLink,
   backText,
 }) {
-
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
-  const router = useRouter()
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuth();
 
-  function handleSubmit (e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (email  === "" || password === ""){
-      alert("Email dan password harus diisi")
-    return
+    setError("");
+
+    if (email === "" || password === "") {
+      setError("Email dan password harus diisi");
+      return;
     }
 
-    alert(`${email} berhasil login`)
-    router.push("/")
+    setLoading(true);
+    try {
+      // POST /api/login ke Express -> dapat JWT (token) + data user
+      await login({ email, password });
+      router.push("/menu/streamer");
+    } catch (err) {
+      setError(err.message || "Email atau password salah");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -36,7 +49,7 @@ export default function LoginForm({
           <p className="text-gray-400 mt-2">{subtitle}</p>
         </div>
 
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm text-gray-300 mb-2">Email</label>
 
@@ -55,18 +68,25 @@ export default function LoginForm({
             <input
               type="password"
               placeholder="Masukkan password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 bg-[#0F0F0F] border border-gray-700 rounded-xl text-white placeholder-gray-500 outline-none focus:border-red-600 transition"
             />
           </div>
 
-           <button
-              type="button"
-              onClick={handleSubmit}
-              className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl cursor-pointer transition"
-            >
-              {buttonText}
-            </button>
+          {error && (
+            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl cursor-pointer transition disabled:opacity-50"
+          >
+            {loading ? "Memeriksa..." : buttonText}
+          </button>
         </form>
 
         <p className="text-center text-gray-400 text-sm mt-6">
