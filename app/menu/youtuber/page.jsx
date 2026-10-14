@@ -78,7 +78,7 @@ export default function YoutuberPage() {
       router.push("/login");
       return;
     }
-    fetchYoutubers();
+    void Promise.resolve().then(fetchYoutubers);
   }, [authLoading, isLoggedIn, fetchYoutubers, router]);
 
   async function handleDelete(id) {

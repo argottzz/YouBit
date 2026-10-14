@@ -73,7 +73,7 @@ export default function StreamerPage() {
       router.push("/login");
       return;
     }
-    fetchStreamers();
+    void Promise.resolve().then(fetchStreamers);
   }, [authLoading, isLoggedIn, fetchStreamers, router]);
 
   async function handleDelete(id) {

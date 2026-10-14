@@ -44,7 +44,7 @@ export default function UsersPage() {
       router.push("/menu/streamer");
       return;
     }
-    fetchUsers();
+    void Promise.resolve().then(fetchUsers);
   }, [authLoading, isLoggedIn, user, fetchUsers, router]);
 
   async function handleRole(id, role) {
