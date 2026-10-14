@@ -5,27 +5,29 @@ import { useAuth } from "@/lib/auth-context";
 
 export default function Navbar() {
   const { user, isLoggedIn, loading, logout } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-[#0F0F0F] border-b border-gray-700">
-      <Link
-        href="/"
-        className="flex items-center gap-2 text-2xl font-bold text-red-600"
-      >
-        <span className="text-white cursor-pointer">
-          You<span className="text-red-600">Bit</span>
-        </span>
+    <nav className="sticky top-0 z-50 flex items-center justify-between gap-4 px-8 py-4 bg-[#0F0F0F] border-b border-gray-700">
+      <Link href="/" className="text-2xl font-bold text-white">
+        You<span className="text-red-600">Bit</span>
       </Link>
 
-      <div className="hidden md:flex items-center w-full max-w-xl">
-        <div className="flex items-center w-full px-4 py-2 border border-gray-700 rounded-3xl focus-within:border-red-600 transition-colors duration-200">
-          <input
-            type="text"
-            placeholder="Cari video..."
-            className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
-          />
+      {isLoggedIn && (
+        <div className="flex items-center gap-2 text-sm">
+          <Link href="/menu/streamer" className="px-3 py-2 text-gray-300 hover:text-white">
+            Streamer
+          </Link>
+          <Link href="/menu/youtuber" className="px-3 py-2 text-gray-300 hover:text-white">
+            Youtuber
+          </Link>
+          {isAdmin && (
+            <Link href="/menu/users" className="px-3 py-2 text-gray-300 hover:text-white">
+              Users
+            </Link>
+          )}
         </div>
-      </div>
+      )}
 
       <div className="flex items-center gap-3">
         {loading ? (
@@ -37,23 +39,19 @@ export default function Navbar() {
             </span>
             <button
               onClick={logout}
-              className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-red-600 hover:border-red-600 cursor-pointer text-white"
+              className="px-4 py-2 border border-gray-700 rounded-3xl hover:bg-red-600 hover:border-red-600 cursor-pointer text-white"
             >
               Logout
             </button>
           </>
         ) : (
-          <Link href="/login">
-            <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
-              Login
-            </button>
+          <Link
+            href="/login"
+            className="px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] text-white"
+          >
+            Login
           </Link>
         )}
-        <Link href="/menu/streamer">
-          <button className="flex items-center px-4 py-2 border border-gray-700 rounded-3xl hover:bg-[#263850] cursor-pointer text-white">
-            Report
-          </button>
-        </Link>
       </div>
     </nav>
   );
