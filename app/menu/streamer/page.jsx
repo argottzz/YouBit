@@ -8,6 +8,37 @@ import AddDataForm from "@/components/AddFormData";
 import { useAuth } from "@/lib/auth-context";
 import { streamerApi } from "@/lib/api";
 
+const columns = [
+  { header: "Id", key: "id" },
+  { header: "Nama", key: "namast" },
+  { header: "Kategori", key: "kategorist" },
+  {
+    header: "Subscriber",
+    key: "subscriber",
+    format: (value) => Number(value ?? 0).toLocaleString("id-ID"),
+  },
+  {
+    header: "Views",
+    key: "views",
+    format: (value) => Number(value ?? 0).toLocaleString("id-ID"),
+  },
+  {
+    header: "Gambar (Cloudinary)",
+    key: "image_url",
+    render: (value) =>
+      value ? (
+        <img
+          src={value}
+          alt="Streamer"
+          className="h-14 w-20 rounded-lg border border-white/10 object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <span className="text-gray-500">-</span>
+      ),
+  },
+];
+
 export default function StreamerPage() {
   const [streamers, setStreamers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,13 +53,10 @@ export default function StreamerPage() {
     setLoading(true);
     setError("");
     try {
-      // GET /api/streamers dengan header Authorization: Bearer <JWT>
-      const responseJson = await streamerApi.list(token);
-      setStreamers(responseJson.data ?? []);
+      const res = await streamerApi.list(token);
+      setStreamers(res.data ?? []);
     } catch (err) {
-      console.error("Gagal mengambil data streamer:", err);
       if (err.status === 401 || err.status === 422) {
-        // Token tidak valid / kadaluarsa (verifyToken backend) -> paksa login ulang
         logout();
         router.push("/login");
         return;
@@ -45,36 +73,12 @@ export default function StreamerPage() {
       router.push("/login");
       return;
     }
-    // Fetch di dalam callback promise (bukan setState sinkron di body effect)
-    let cancelled = false;
-    streamerApi
-      .list(token)
-      .then((responseJson) => {
-        if (!cancelled) setStreamers(responseJson.data ?? []);
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        console.error("Gagal mengambil data streamer:", err);
-        if (err.status === 401 || err.status === 422) {
-          logout();
-          router.push("/login");
-          return;
-        }
-        setError(err.message || "Gagal mengambil data streamer");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, isLoggedIn, token]);
+    fetchStreamers();
+  }, [authLoading, isLoggedIn, fetchStreamers, router]);
 
   async function handleDelete(id) {
     if (!confirm("Hapus streamer ini? Gambar di Cloudinary ikut dihapus backend.")) return;
     try {
-      // DELETE /api/streamers/:id (backend destroy public_id di Cloudinary)
       await streamerApi.remove(id, token);
       fetchStreamers();
     } catch (err) {
@@ -82,39 +86,12 @@ export default function StreamerPage() {
     }
   }
 
-  const columns = [
-    { header: "Id", key: "id" },
-    { header: "Nama", key: "namast" },
-    { header: "Kategori", key: "kategorist" },
-    {
-      header: "Subscriber",
-      key: "subscriber",
-      format: (value) => Number(value ?? 0).toLocaleString("id-ID"),
-    },
-    {
-      header: "Views",
-      key: "views",
-      format: (value) => Number(value ?? 0).toLocaleString("id-ID"),
-    },
-    {
-      header: "Gambar (Cloudinary)",
-      key: "image_url",
-      render: (value) =>
-        value ? (
-          <img
-            src={value}
-            alt="Streamer"
-            className="h-14 w-20 rounded-lg border border-white/10 object-cover"
-            loading="lazy"
-          />
-        ) : (
-          <span className="text-gray-500">-</span>
-        ),
-    },
+  const tableColumns = [
+    ...columns,
     {
       header: "Aksi",
-      key: "id",
-      render: (value, item) => (
+      key: "aksi",
+      render: (_, item) => (
         <div className="flex gap-2">
           <button
             onClick={() => setEditing(item)}
@@ -123,7 +100,7 @@ export default function StreamerPage() {
             Ubah
           </button>
           <button
-            onClick={() => handleDelete(value)}
+            onClick={() => handleDelete(item.id)}
             className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-700"
           >
             Hapus
@@ -154,12 +131,10 @@ export default function StreamerPage() {
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Daftar Streamer
             </h1>
-
             <p className="mt-1 text-sm text-gray-400">
               Data dilindungi JWT. Gambar disimpan di Cloudinary via backend.
             </p>
           </div>
-
           <AddDataForm type="streamer" onSuccess={fetchStreamers} />
         </div>
 
@@ -169,7 +144,7 @@ export default function StreamerPage() {
           </p>
         )}
 
-        <DataTable data={streamers} columns={columns} />
+        <DataTable data={streamers} columns={tableColumns} />
 
         {editing && (
           <AddDataForm
