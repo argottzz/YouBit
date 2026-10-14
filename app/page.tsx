@@ -17,6 +17,14 @@ function HomeContent() {
 
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
+  const [prevQuery, setPrevQuery] = useState(`${search}|${category}`);
+
+  // Reset ke halaman 1 saat query berubah (pola render-time adjustment,
+  // bukan setState di dalam effect).
+  if (prevQuery !== `${search}|${category}`) {
+    setPrevQuery(`${search}|${category}`);
+    setPage(1);
+  }
   const [videos, setVideos] = useState<Video[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,10 +52,6 @@ function HomeContent() {
       setLoading(false);
     }
   }, [search, category, page]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [search, category]);
 
   useEffect(() => {
     void Promise.resolve().then(fetchVideos);

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { Channel, ChannelPayload } from "@/types/channel";
-import FormInput from "@/components/common/FormInput";
+import FormInput, { FormTextarea } from "@/components/common/FormInput";
 import ImageUploader from "@/components/common/ImageUploader";
 
 export default function ChannelForm({
@@ -46,9 +46,8 @@ export default function ChannelForm({
         maxLength={100}
         required
       />
-      <FormInput
+      <FormTextarea
         label="Deskripsi Channel"
-        textarea
         rows={4}
         placeholder="Deskripsi channel (opsional)"
         value={description}

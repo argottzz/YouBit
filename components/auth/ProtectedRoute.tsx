@@ -12,7 +12,7 @@ export default function ProtectedRoute({
   children: ReactNode;
   adminOnly?: boolean;
 }) {
-  const { user, loading, isLoggedIn, isAdmin } = useAuth();
+  const { loading, isLoggedIn, isAdmin } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,6 +36,5 @@ export default function ProtectedRoute({
     );
   }
 
-  void user;
   return <>{children}</>;
 }

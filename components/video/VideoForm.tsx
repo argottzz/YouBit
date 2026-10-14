@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { Video, VideoPayload, Visibility } from "@/types/video";
-import FormInput from "@/components/common/FormInput";
+import FormInput, { FormSelect, FormTextarea } from "@/components/common/FormInput";
 import ImageUploader from "@/components/common/ImageUploader";
 
 const VISIBILITIES: Visibility[] = ["public", "private", "unlisted"];
@@ -63,9 +63,8 @@ export default function VideoForm({
         maxLength={200}
         required
       />
-      <FormInput
+      <FormTextarea
         label="Deskripsi"
-        textarea
         rows={4}
         placeholder="Deskripsi video (opsional)"
         value={description}
@@ -89,9 +88,8 @@ export default function VideoForm({
           required
         />
       </div>
-      <FormInput
+      <FormSelect
         label="Visibilitas"
-        select
         value={visibility}
         onChange={(e) => setVisibility(e.target.value as Visibility)}
       >
@@ -100,7 +98,7 @@ export default function VideoForm({
             {v}
           </option>
         ))}
-      </FormInput>
+      </FormSelect>
 
       <ImageUploader
         label={`Thumbnail ${initial ? "(opsional — ganti jika perlu)" : "(opsional)"}`}
