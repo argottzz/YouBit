@@ -48,6 +48,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
+    if (!res?.token) throw new Error("Login gagal: token tidak diterima");
     persistSession({ token: res.token, user: res.data });
     setToken(res.token);
     setUser(res.data);
@@ -56,6 +57,7 @@ export function AuthProvider({ children }) {
 
   const register = useCallback(async ({ username, email, password }) => {
     const res = await authApi.register({ username, email, password });
+    if (!res?.token) throw new Error("Register gagal: token tidak diterima");
     persistSession({ token: res.token, user: res.data });
     setToken(res.token);
     setUser(res.data);
